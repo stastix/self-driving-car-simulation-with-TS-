@@ -20,22 +20,6 @@ This project is a browser-based self-driving car simulation built entirely with 
 
 ---
 
-## Architecture Overview
-
-```mermaid
-graph TD
-  A[App (React)] -->|Renders| B(CanvasComponent)
-  B -->|Draws| C[Road]
-  B -->|Draws| D[Car]
-  D -->|Has| E[Sensor]
-  D -->|Has| F[Controls]
-  D -->|Interacts| G[Road Borders]
-  D -->|Interacts| H[Traffic Cars]
-  E -->|Detects| G
-  E -->|Detects| H
-```
-
----
 
 ## Main Components
 
@@ -55,14 +39,6 @@ graph TD
 - Sensors collect data about the environment (distances to borders/traffic).
 - The car updates its position and checks for collisions.
 - Traffic cars move along predefined paths.
-
----
-
-## Example Screenshot
-
-<!-- Add a screenshot to public/screenshot.png to display it here -->
-
-![Simulation Screenshot](public/screenshot.png)
 
 ---
 
