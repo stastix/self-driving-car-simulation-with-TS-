@@ -1,3 +1,4 @@
+import type { Border } from "./sensor";
 import { lerp } from "./utils";
 
 const infinity = 1000000;
@@ -9,7 +10,7 @@ export class Road {
   right: number;
   top: number;
   bottom: number;
-  borders: { x: number; y: number }[][];
+  borders: Border[];
   constructor(x: number, width: number, laneCount = 3) {
     this.x = x;
     this.width = width;

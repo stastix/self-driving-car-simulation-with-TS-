@@ -1,69 +1,110 @@
-# React + TypeScript + Vite
+# Self-Driving Car Simulation (TypeScript + React)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a browser-based self-driving car simulation built entirely with TypeScript and React. It currently features:
 
-Currently, two official plugins are available:
+- Realistic road and lane rendering
+- Traffic cars (dummy cars) and collision detection
+- Physics-based car movement and driving mechanics
+- Interactive sensor system (LIDAR-like rays) for each car
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+**Note:** Neural network AI and training are not yet implemented. The current focus is on the driving, collision, and sensor systems. Neural network-based autonomous driving will be added in a future update.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Features
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- **Pure TypeScript/React**: All simulation logic is implemented from scratch in TypeScript. No external ML libraries are used.
+- **Interactive Visualization**: See cars drive on a rendered road, with real-time sensor rays and collision feedback.
+- **Traffic and Collision**: Multiple cars (including dummy traffic) interact and collide realistically.
+- **Customizable Parameters**: Easily adjust car, sensor, and road parameters.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Architecture Overview
+
+```mermaid
+graph TD
+  A[App (React)] -->|Renders| B(CanvasComponent)
+  B -->|Draws| C[Road]
+  B -->|Draws| D[Car]
+  D -->|Has| E[Sensor]
+  D -->|Has| F[Controls]
+  D -->|Interacts| G[Road Borders]
+  D -->|Interacts| H[Traffic Cars]
+  E -->|Detects| G
+  E -->|Detects| H
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Main Components
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- **App / CanvasComponent**: Top-level React components that set up the simulation and rendering loop.
+- **Road**: Handles lane layout, drawing, and border collision logic.
+- **Car**: Represents each vehicle, including position, physics, and drawing. Cars can be user-controlled or dummy traffic.
+- **Sensor**: Simulates LIDAR-like rays to detect road borders and obstacles.
+- **Controls**: Handles user input for manual driving.
+
+---
+
+## How It Works
+
+1. **Initialization**: The app creates a road and a set of cars (user and dummy traffic).
+2. **Simulation Loop**: On each animation frame:
+
+- Sensors collect data about the environment (distances to borders/traffic).
+- The car updates its position and checks for collisions.
+- Traffic cars move along predefined paths.
+
+---
+
+## Example Screenshot
+
+<!-- Add a screenshot to public/screenshot.png to display it here -->
+
+![Simulation Screenshot](public/screenshot.png)
+
+---
+
+## Getting Started
+
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+2. **Run the development server:**
+   ```bash
+   npm run dev
+   ```
+3. Open your browser to [http://localhost:5173](http://localhost:5173) (or the port shown in your terminal).
+
+---
+
+## Customization
+
+- Adjust car and sensor parameters in `src/Car.ts` and `src/Sensor.ts`.
+- Tweak road and traffic settings in `src/Road.ts` and the main app.
+
+---
+
+## Project Structure
+
 ```
+src/
+  App.tsx            # Main React app
+  Canvas.tsx         # Canvas rendering and animation
+  Car.ts             # Car logic and physics
+  Controls.ts        # User/AI controls
+  NeuralNetwork.ts   # Neural network implementation
+  Road.ts            # Road and lane logic
+  Sensor.ts          # Sensor (raycasting) logic
+  utils.ts           # Math and helper functions
+public/
+  screenshot.png     # Example simulation screenshot
+```
+
+---
+
+## License
+
+MIT. Educational use encouraged!
