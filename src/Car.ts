@@ -1,6 +1,6 @@
 import { Controls } from "./Controls";
-import { Sensor, type Border } from "./sensor";
 import { polysIntersect, type Point } from "./utils";
+import { type Border } from "./sensor";
 
 export class Car {
   x: number;
@@ -14,9 +14,10 @@ export class Car {
   angle = 0;
   damaged = false;
   controls: Controls;
-  sensor?: Sensor;
   polygon: Point[];
   controlType: string;
+  useBrain: boolean;
+
   constructor(
     x: number,
     y: number,
@@ -29,12 +30,12 @@ export class Car {
     this.y = y;
     this.width = width;
     this.height = height;
+    this.useBrain = controlType == "AI";
 
     this.controls = new Controls(controlType);
     this.polygon = this.createPolygon();
     this.controlType = controlType;
     this.maxSpeed = maxSpeed;
-    if (controlType != "DUMMY") this.sensor = new Sensor(this);
   }
 
   update(roadBorders: Border[], traffic: Car[]) {
@@ -43,7 +44,13 @@ export class Car {
       this.polygon = this.createPolygon();
       this.damaged = this.assessDamage(roadBorders, traffic);
     }
-    if (this.sensor) this.sensor.update(roadBorders, traffic);
+
+    console.log({
+      forward: this.controls.forward,
+      reverse: this.controls.reverse,
+      left: this.controls.left,
+      right: this.controls.right,
+    });
   }
 
   private move() {
@@ -63,7 +70,6 @@ export class Car {
       if (this.controls.right) this.angle -= 0.03 * flip;
     }
 
-    // correct signs
     this.x -= Math.sin(this.angle) * this.speed;
     this.y -= Math.cos(this.angle) * this.speed;
   }
@@ -76,7 +82,6 @@ export class Car {
       ctx.lineTo(this.polygon[i].x, this.polygon[i].y);
     }
     ctx.fill();
-    if (this.sensor) this.sensor.draw(ctx);
   }
 
   private assessDamage(roadBorders: Border[], traffic: Car[]) {
@@ -84,9 +89,7 @@ export class Car {
       if (polysIntersect(this.polygon, roadBorders[i])) return true;
     }
     for (let i = 0; i < traffic.length; i++) {
-      if (polysIntersect(this.polygon, traffic[i].polygon)) {
-        return true;
-      }
+      if (polysIntersect(this.polygon, traffic[i].polygon)) return true;
     }
     return false;
   }

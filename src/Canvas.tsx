@@ -13,7 +13,7 @@ const CanvasComponent: React.FC = () => {
 
     canvas.width = 200;
     const road = new Road(canvas.width / 2, canvas.width * 0.9);
-    const car = new Car(road.getLAneCenter(1), 100, 30, 50, "MAIN");
+    const car = new Car(road.getLAneCenter(1), 100, 30, 50, "AI");
     const traffic = [new Car(road.getLAneCenter(1), -100, 30, 50, "DUMMY", 2)];
     const animate = () => {
       for (let i = 0; i < traffic.length; i++) {
