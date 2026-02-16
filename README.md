@@ -1,51 +1,80 @@
-# 🚗 Self-Driving Car City Simulation
+# Self-Driving Car Simulation (TypeScript + React)
 
 <div align="center">
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
-![Neural Networks](https://img.shields.io/badge/AI-Neural%20Networks-FF6B6B?style=for-the-badge)
 
-**An advanced browser-based city simulation featuring AI-powered self-driving cars that navigate complex urban environments using neural networks and sensor arrays.**
+**A browser-based prototype demonstrating neural network-driven cars in a simple grid city environment.**
 
-[Features](#-features) • [Demo](#-demo) • [Installation](#-installation) • [How It Works](#-how-it-works) • [Technology Stack](#-technology-stack)
+⚠️ **Work in Progress** - This is a learning project with known issues. See [Known Issues](#-known-issues) below.
 
 </div>
 
 ---
 
-## ✨ Features
+## 📋 What This Is
 
-### 🏙️ **Dynamic City Environment**
-- **Grid-based city layout** with multiple intersecting roads
-- **3D-style buildings** with procedurally generated windows
-- **Realistic road network** with lane markings and intersections
-- **Infinite city expansion** with smooth camera following
+This is a **prototype/demo project** that attempts to simulate self-driving cars using:
+- Custom neural networks (feedforward architecture)
+- Ray-based sensors (LIDAR-like)
+- Basic physics and collision detection
+- A simple grid-based city with roads and buildings
 
-### 🤖 **Intelligent AI System**
-- **Neural Network Architecture**: Custom-built feedforward neural networks
-- **Multi-sensor Array**: 7-ray LIDAR-like sensors with 180° field of view
-- **Collision Avoidance**: Advanced pathfinding and obstacle detection
-- **Adaptive Learning**: Cars respawn with improved AI after crashes
-- **Real-time Decision Making**: Continuous sensor input processing
+**Current State**: The simulation works but has significant limitations. Cars can navigate and avoid some collisions, but behavior is imperfect. This is primarily a learning project to understand neural networks, game physics, and canvas rendering.
 
-### 🚦 **Advanced Traffic Management**
-- **Smart Traffic System**: AI-controlled traffic cars with collision avoidance
-- **Dynamic Spawning**: Traffic cars spawn and despawn based on simulation state
-- **Speed Regulation**: Traffic adapts speed based on proximity to other vehicles
-- **Multi-lane Navigation**: Cars intelligently choose lanes and routes
+---
 
-### 📊 **Real-time Analytics Dashboard**
-- **Live Statistics**: Active cars, total distance traveled, crash count, simulation time
-- **Interactive Controls**: Toggle sensor visualization, pause/resume simulation
-- **Performance Metrics**: Track AI performance and learning progress
+## ✨ What Works
 
-### 🎨 **Beautiful Visuals**
-- **Modern UI Design**: Sleek dashboard with glassmorphism effects
-- **Smooth Animations**: 60 FPS rendering with optimized canvas operations
-- **Color-coded Elements**: Distinct colors for AI cars, traffic, and sensors
-- **Dynamic Lighting**: Gradient backgrounds and visual feedback
+- ✅ **Basic City Environment**: Grid-based road system (5x5) with buildings
+- ✅ **Neural Network AI**: Custom feedforward networks (7→6→4 architecture)
+- ✅ **Sensor System**: 7-ray sensors that detect obstacles and road borders
+- ✅ **Collision Detection**: Polygon-based collision system
+- ✅ **Visual Rendering**: Canvas-based graphics with neon-style visuals
+- ✅ **Basic Traffic**: Simple traffic cars that move along roads
+- ✅ **UI Dashboard**: Real-time stats and controls
+
+---
+
+## ⚠️ Known Issues & Limitations
+
+### Current Problems
+
+- **Unpredictable Car Behavior**: Cars sometimes rotate meaninglessly or get stuck
+- **Random Crashes**: Cars crash unexpectedly even when path appears clear
+- **Spawn Issues**: Some cars don't spawn correctly or spawn off-road
+- **Navigation Problems**: Cars don't always stay on roads - they may drive through buildings
+- **AI Limitations**: Neural network decision-making is basic and not well-trained
+- **No Real Learning**: Cars respawn with random mutations, not actual learning from experience
+- **Traffic Issues**: Traffic cars have very basic AI and can cause jams
+
+### What Needs Improvement
+
+1. **Better AI Training**
+   - Implement proper genetic algorithm or reinforcement learning
+   - Save/load trained models
+   - Better reward/punishment system
+
+2. **Improved Navigation**
+   - Pathfinding to keep cars on roads
+   - Better intersection handling
+   - Lane following logic
+
+3. **Physics Refinement**
+   - More realistic car movement
+   - Better collision response
+   - Improved turning mechanics
+
+4. **Spawn System**
+   - Ensure cars always spawn on valid road positions
+   - Better initial positioning logic
+
+5. **Traffic Management**
+   - Smarter traffic AI
+   - Traffic lights at intersections
+   - Better flow control
 
 ---
 
@@ -84,158 +113,156 @@ npm run preview
 
 ---
 
-## 🧠 How It Works
+## 🧠 How It Works (Simplified)
 
-### Neural Network Architecture
-
-The AI system uses a custom-built neural network with the following structure:
+### Neural Network
 
 ```
-Input Layer (7 neurons)  →  Hidden Layer (6 neurons)  →  Output Layer (4 neurons)
-     ↓                            ↓                            ↓
-Sensor Readings          Feature Extraction          Control Decisions
-(7 ray distances)        (Pattern Recognition)       (Forward/Left/Right/Reverse)
+Input (7 sensors) → Hidden Layer (6 neurons) → Output (4 controls)
 ```
+
+- **Input**: Distance readings from 7 sensor rays
+- **Hidden Layer**: 6 neurons with ReLU activation
+- **Output**: 4 control signals (forward, left, right, reverse)
 
 ### Sensor System
 
-Each AI car is equipped with **7 sensor rays** that:
+Each car has 7 rays that:
 - Cast in a 180° arc in front of the car
-- Detect distances to road borders and other vehicles
-- Provide normalized input values (0-1) to the neural network
-- Visualize detection with color-coded rays (yellow = safe, red = danger)
+- Detect distance to obstacles (roads, other cars)
+- Return normalized values (0 = hit, 1 = clear)
 
-### Decision Making Process
+### Decision Making
 
-1. **Sensor Reading**: Car casts rays and measures distances to obstacles
-2. **Neural Network Processing**: Sensor data fed through trained network
-3. **Output Interpretation**: Network outputs control signals (forward, left, right, reverse)
-4. **Action Execution**: Car executes highest-confidence control action
-5. **Continuous Learning**: Crashed cars respawn with mutated neural networks
+1. Sensors read environment
+2. Values fed through neural network
+3. Network outputs control signals
+4. Car executes highest output (with some safety overrides)
+5. If car crashes, it respawns with slightly mutated network
 
-### Collision Avoidance
-
-- **Polygon-based Collision Detection**: Precise collision detection using car polygons
-- **Predictive Braking**: Cars slow down when obstacles detected ahead
-- **Lane Management**: Traffic cars maintain safe following distances
-- **Intersection Handling**: Smart navigation through complex intersections
+**Note**: The "learning" is very basic - just random mutations, not actual training.
 
 ---
 
-## 🏗️ Architecture
-
-### Core Components
+## 🏗️ Project Structure
 
 ```
 src/
-├── City.ts              # City generation, roads, buildings, intersections
-├── Road.ts              # Road rendering and lane management
-├── Car.ts               # Car physics, AI integration, collision detection
-├── Sensor.ts            # LIDAR-like sensor raycasting system
+├── City.ts              # City generation (roads, buildings)
+├── Road.ts              # Road rendering and lane logic
+├── Car.ts               # Car physics, AI, collision detection
+├── Sensor.ts            # Ray-based sensor system
 ├── Network.ts           # Neural network implementation
-├── TrafficManager.ts    # Traffic spawning and AI management
-├── Controls.ts          # Input handling (keyboard/AI)
-├── Canvas.tsx           # Main simulation loop and rendering
-├── App.tsx              # React application entry point
-└── utils.ts             # Math utilities (lerp, intersections, etc.)
+├── TrafficManager.ts    # Basic traffic car management
+├── Controls.ts          # Input handling
+├── Canvas.tsx           # Main rendering loop
+├── App.tsx              # React app entry
+└── utils.ts             # Math utilities
 ```
-
-### Key Classes
-
-- **`City`**: Manages the entire city environment, generates buildings and roads
-- **`Car`**: Represents vehicles with physics, sensors, and neural network brain
-- **`NeuralNetwork`**: Feedforward network with ReLU activation
-- **`Sensor`**: Raycasting system for obstacle detection
-- **`TrafficManager`**: Handles traffic car spawning and basic AI
 
 ---
 
 ## 🎮 Controls
 
-| Action | Description |
-|--------|-------------|
-| **Toggle Sensors** | Show/hide sensor ray visualization |
-| **Pause/Resume** | Pause or resume the simulation |
-| **Auto Camera** | Camera automatically follows the best-performing car |
-
----
-
-## 📈 Performance
-
-- **60 FPS** rendering on modern browsers
-- **Optimized collision detection** using polygon intersection algorithms
-- **Efficient neural network** forward propagation
-- **Canvas-based rendering** for smooth animations
+- **Toggle Sensors**: Show/hide sensor ray visualization
+- **Pause/Resume**: Pause or resume the simulation
+- **Camera**: Automatically follows the best-performing car
 
 ---
 
 ## 🔬 Technical Details
 
-### Neural Network Implementation
+### Neural Network
+- **Architecture**: Feedforward (7→6→4)
+- **Activation**: ReLU
+- **Initialization**: Random weights (-1 to 1)
+- **Mutation**: 15% random mutation on respawn
 
-- **Activation Function**: ReLU (Rectified Linear Unit)
-- **Weight Initialization**: Random values between -1 and 1
-- **Mutation Strategy**: Linear interpolation with random values (10% mutation rate)
-- **Training**: Evolutionary approach - best performers survive crashes
-
-### Physics System
-
+### Physics
 - **Acceleration**: 0.2 units/frame²
 - **Max Speed**: 3 units/frame
 - **Friction**: 0.05 units/frame
-- **Turning Rate**: 0.03 radians/frame
+- **Turning**: 0.03 radians/frame
 
-### Sensor Configuration
-
-- **Ray Count**: 7 rays
-- **Ray Length**: 200 pixels
-- **Field of View**: 180° (π radians)
-- **Update Rate**: Every frame (60 Hz)
+### Sensors
+- **Rays**: 7
+- **Range**: 200 pixels
+- **Field of View**: 180°
+- **Update**: Every frame (60 Hz)
 
 ---
 
-## 🎯 Future Enhancements
+## 🎯 Future Improvements (Roadmap)
 
-- [ ] Genetic algorithm for neural network evolution
-- [ ] Traffic light system at intersections
-- [ ] Pedestrian simulation
-- [ ] Multiple AI strategies (aggressive, defensive, balanced)
-- [ ] Save/load trained neural networks
-- [ ] Performance benchmarking and analytics
-- [ ] 3D visualization mode
-- [ ] Multiplayer mode with human drivers
+### High Priority
+- [ ] Fix spawn system to ensure cars start on roads
+- [ ] Improve AI to keep cars on roads
+- [ ] Better collision avoidance logic
+- [ ] Reduce random rotations and stuck behavior
+
+### Medium Priority
+- [ ] Implement genetic algorithm for actual learning
+- [ ] Add pathfinding for road following
+- [ ] Better traffic management
+- [ ] Save/load trained networks
+
+### Low Priority
+- [ ] Traffic lights at intersections
+- [ ] Multiple AI strategies
+- [ ] Performance optimizations
+- [ ] 3D visualization option
 
 ---
 
 ## 🛠️ Technology Stack
 
-- **TypeScript**: Type-safe JavaScript for robust code
-- **React 19**: Modern UI framework
-- **Vite**: Lightning-fast build tool
-- **Canvas API**: High-performance 2D rendering
-- **Tailwind CSS**: Utility-first styling
-- **Custom Neural Network**: From-scratch implementation
+- **TypeScript**: Type-safe JavaScript
+- **React 19**: UI framework
+- **Vite**: Build tool
+- **Canvas API**: 2D rendering
+- **Tailwind CSS**: Styling
+- **Custom Neural Network**: From-scratch implementation (no ML libraries)
+
+---
+
+## 📝 Notes
+
+- This is a **learning project**, not production-ready code
+- The AI is **not well-trained** - it's mostly random behavior with basic obstacle avoidance
+- Cars will crash frequently - this is expected with the current implementation
+- The "city" is a simple grid - not a realistic urban simulation
+- Performance is decent but not optimized
+
+---
+
+## 🤝 Contributing
+
+This is a work-in-progress project. If you want to help improve it:
+1. Focus on fixing the known issues listed above
+2. Improve the AI training/learning system
+3. Better navigation and pathfinding
+4. Code cleanup and optimization
 
 ---
 
 ## 📝 License
 
-MIT License - feel free to use this project for learning, research, or portfolio purposes!
+MIT License - feel free to use, modify, and learn from this project!
 
 ---
 
 ## 🙏 Acknowledgments
 
-- Inspired by neural network and autonomous vehicle research
-- Built with modern web technologies for maximum performance
-- Designed to showcase AI/ML concepts in an interactive way
+- Built as a learning exercise for neural networks and game physics
+- Inspired by various self-driving car simulation tutorials
+- Uses modern web technologies for browser-based simulation
 
 ---
 
 <div align="center">
 
-**Built with ❤️ using TypeScript, React, and Neural Networks**
+**Built with TypeScript, React, and Custom Neural Networks**
 
-⭐ Star this repo if you find it interesting!
+⚠️ **Remember**: This is a prototype with known issues. Expect imperfect behavior!
 
 </div>
