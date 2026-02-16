@@ -3,7 +3,7 @@ import CanvasComponent from "./Canvas";
 
 function App() {
   return (
-    <div className="overflow-hidden bg-gray-700 text-center">
+    <div className="overflow-hidden w-full h-screen bg-gray-900">
       <CanvasComponent />
     </div>
   );

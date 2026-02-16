@@ -3,13 +3,19 @@ import { getIntersection, lerp, type Point } from "./utils";
 
 export type Border = [Point, Point];
 
+export interface Reading {
+  x: number;
+  y: number;
+  offset: number;
+}
+
 export class Sensor {
   car: Car;
-  rayCount = 3;
-  rayLength = 150;
-  raySpread = Math.PI / 2; // 90° cone
+  rayCount = 7;
+  rayLength = 200;
+  raySpread = Math.PI; // 180° cone
   rays: [Point, Point][] = [];
-  readings: (Point | null)[] = [];
+  readings: (Reading | null)[] = [];
 
   constructor(car: Car) {
     this.car = car;
@@ -26,7 +32,7 @@ export class Sensor {
     ray: [Point, Point],
     borders: Border[],
     traffic: Car[]
-  ): Point | null {
+  ): Reading | null {
     const touches: { x: number; y: number; offset: number }[] = [];
 
     for (const border of borders) {
@@ -48,7 +54,7 @@ export class Sensor {
     if (touches.length === 0) return null;
 
     const min = touches.reduce((a, b) => (a.offset < b.offset ? a : b));
-    return { x: min.x, y: min.y };
+    return { x: min.x, y: min.y, offset: min.offset };
   }
 
   private castRays() {
@@ -70,21 +76,39 @@ export class Sensor {
   draw(ctx: CanvasRenderingContext2D) {
     for (let i = 0; i < this.rayCount; i++) {
       const [start, endDefault] = this.rays[i];
-      const end = this.readings[i] ?? endDefault;
+      const reading = this.readings[i];
+      const end = reading ? { x: reading.x, y: reading.y } : endDefault;
 
-      ctx.beginPath();
+      // Draw ray with neon glow effect
+      const distance = reading ? reading.offset : 1;
+      const intensity = 1 - distance;
+      const alpha = 0.3 + intensity * 0.4;
+      
+      ctx.shadowBlur = 8;
+      ctx.shadowColor = reading 
+        ? `rgba(255, ${255 * (1 - reading.offset)}, 0, ${alpha})`
+        : "rgba(0, 255, 255, 0.2)";
+      
+      ctx.strokeStyle = reading
+        ? `rgba(255, ${255 * (1 - reading.offset)}, 0, ${alpha})`
+        : "rgba(0, 255, 255, 0.2)";
       ctx.lineWidth = 2;
-      ctx.strokeStyle = "yellow";
+      ctx.beginPath();
       ctx.moveTo(start.x, start.y);
       ctx.lineTo(end.x, end.y);
       ctx.stroke();
+      ctx.shadowBlur = 0;
 
-      ctx.beginPath();
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = "black";
-      ctx.moveTo(this.rays[i][1].x, this.rays[i][1].y);
-      ctx.lineTo(end.x, end.y);
-      ctx.stroke();
+      // Draw hit point
+      if (reading) {
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = "#ff0000";
+        ctx.fillStyle = "#ff0000";
+        ctx.beginPath();
+        ctx.arc(end.x, end.y, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
     }
   }
 }

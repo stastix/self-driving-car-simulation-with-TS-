@@ -14,11 +14,32 @@ export class NeuralNetwork {
   static feedForward(givenInputs: number[], network: NeuralNetwork): number[] {
     let outputs = Level.feedForward(givenInputs, network.levels[0]);
 
-    for (let i = 0; i < network.levels.length; i++) {
+    for (let i = 1; i < network.levels.length; i++) {
       outputs = Level.feedForward(outputs, network.levels[i]);
     }
 
     return outputs;
+  }
+
+  static mutate(network: NeuralNetwork, amount: number = 1) {
+    network.levels.forEach((level) => {
+      for (let i = 0; i < level.biases.length; i++) {
+        level.biases[i] = lerp(
+          level.biases[i],
+          Math.random() * 2 - 1,
+          amount
+        );
+      }
+      for (let i = 0; i < level.weights.length; i++) {
+        for (let j = 0; j < level.weights[i].length; j++) {
+          level.weights[i][j] = lerp(
+            level.weights[i][j],
+            Math.random() * 2 - 1,
+            amount
+          );
+        }
+      }
+    });
   }
 }
 
@@ -73,10 +94,14 @@ export class Level {
       for (let j = 0; j < level.inputs.length; j++) {
         sum += level.inputs[j] * level.weights[j][i];
       }
-      // simple step activation
-      level.outputs[i] = sum > level.biases[i] ? 1 : 0;
+      // ReLU activation function
+      level.outputs[i] = Math.max(0, sum + level.biases[i]);
     }
 
     return level.outputs;
   }
+}
+
+function lerp(start: number, end: number, t: number): number {
+  return start + (end - start) * t;
 }
