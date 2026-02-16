@@ -1,5 +1,4 @@
 import { Car } from "./Car";
-import { Road } from "./Road";
 import { City } from "./City";
 import { type Point } from "./utils";
 

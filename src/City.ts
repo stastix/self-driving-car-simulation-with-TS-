@@ -1,5 +1,5 @@
 import { Road } from "./Road";
-import { lerp, type Point } from "./utils";
+import { type Point } from "./utils";
 
 export interface Building {
   x: number;
