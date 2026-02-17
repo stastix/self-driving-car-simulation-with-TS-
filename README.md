@@ -87,7 +87,7 @@ This is a **prototype/demo project** that attempts to simulate self-driving cars
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/self-driving-car-simulation-with-TS-.git
+   git clone https://github.com/stastix/self-driving-car-simulation-with-TS-.git
    cd self-driving-car-simulation-with-TS-
    ```
 
